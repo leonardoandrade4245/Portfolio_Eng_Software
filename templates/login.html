@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="py-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_login.css') }}">
+    <title>Olivia Modas</title>
+</head>
+<body class="body_login">
+    <section class="cabecalho">
+        <img class="logo_login" src="{{ url_for('static', filename='img/Olivia Modas.jpg') }}" alt="Minha Imagem"/>
+    </section>
+
+    <section class="formulario">
+        <form action="/principal" method="post" class="forms">
+            <label class="legenda_login1">Login</label>
+            <input class="input_login" type="text" name="txtLogin" placeholder="Login" required>
+
+            <label class="legenda_login2">Senha</label>
+            <input class="input_login" type="password" name="txtSenha" placeholder="Senha" required>
+
+            <button class="btn_entrar" type="submit">
+                <text class="txt_btn">Entrar</text>
+            </button>
+            {% if mensagem %}
+                <p style="color: red;">{{ mensagem }}</p>
+            {% endif %}
+        </form>
+    </section>
+</body>
+</html>

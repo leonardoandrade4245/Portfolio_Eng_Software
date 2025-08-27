@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_login.css') }}">
+    <title>Olivia Modas - Home</title>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-bar">
+            <div class="logo">
+                <img class="logo_principal" src="{{ url_for('static', filename='img/Olivia Modas.jpg') }}" alt="Minha Imagem"/>
+            </div>
+
+            <div class="nav-list">
+                <ul>
+                    <li class="nav-item"><a href="#Inicio" class="nav-link">Início</a></li>
+                    <li class="nav-item"><a href="#Controle" class="nav-link">Controle</a></li>
+                    <li class="nav-item"><a href="#Contato" class="nav-link">Contato</a></li>
+                </ul>
+            </div>
+            <div class="login-button">
+                <button class="btn_entrar_principal">
+                    <a href="{{ url_for('perfil') }}" class="txt_btn_header">Perfil</a>
+                </button>
+            </div>
+
+            <div class="mobile-menu-icon">
+                <button class="btn_entrar_principal">
+                    <a href="{{ url_for('perfil') }}" class="txt_btn_header">Perfil</a>
+                </button>
+            </div>
+        </nav>
+        <div class="mobile-menu">
+            <ul>
+                <li class="nav-item"><a href="#Inicio" class="nav-link">Início</a></li>
+                <li class="nav-item"><a href="#Controle" class="nav-link">Controle</a></li>
+                <li class="nav-item"><a href="#Sobre" class="nav-link">Sobre</a></li>
+            </ul>
+
+            <div class="login-button">
+                <button><a href="#">Perfil</a></button>
+            </div>
+        </div>
+    </header>
+
+    <section id="Inicio" class="Sessao_Principal">
+     <H1 class="titulo_sessao">Estoque Geral</H1>    
+    {% if img_base64 %}
+        <img src="data:image/png;base64,{{ img_base64 }}" alt="Gráfico de Estoque">
+   
+    {% else %}
+     <p>O gráfico não pôde ser carregado.</p>
+    {% endif %}
+
+    <canvas id="graficoProdutos"></canvas>
+    </section>
+
+    <section id="Controle" class="Sessao_Controle">
+        <h1 class="titulo_sessao">Controle de Estoque</h1>
+        <div class="conteudo_controle">
+            <div class="div_estoque_detalhado">
+                <form class="forms_pesquisar_itens" method="GET" action="{{ url_for('principal') }}">
+                    <input type="text" class="input_pesquisar_item" id="searchInput" name="query_estoque" placeholder="Digite o nome do produto..." required>
+                    <button type="submit" class="btn_buscar_item">Buscar</button>
+                    <button type="button" class="btn_desfazer_pesquisa_item" onclick="resetSearch()">Desfazer Pesquisa</button>
+                </form>
+                <table class="tabela_estoque_detalhado">
+                    <thead>
+                        <tr>
+                            <th class="th_div">ID</th>
+                            <th class="th_div">Nome</th>
+                            <th class="th_div">Quantidade</th>
+                            <th class="th_div">Tamanho</th>
+                            <th class="th_div">Preço</th>
+                            <th class="th_div">Categoria</th>
+                            <th class="th_div">Genero</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produto in produtos_estoque %}
+                        <tr>
+                            <td class="td_div">{{ produto.id }}</td>
+                            <td class="td_div">{{ produto.nome }}</td>
+                            <td class="td_div">{{ produto.quantidade }}</td>
+                            <td class="td_div">{{ produto.tamanho }}</td>
+                            <td class="td_div">R$ {{ produto.preco }}</td>
+                            <td class="td_div">{{ produto.categoria.value }}</td>
+                            <td class="td_div">{{ produto.genero.value }}</td>
+                        </tr>
+
+                        {% else %}
+                        <tr>
+                            <td colspan="6">Nenhum produto encontrado</td>
+                        </tr>
+                        
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="div_add_produto">
+                <h1 class="titulo_sessao">Novo Produto</h1>
+                <form class="forms_add_produto" method="POST" action="{{ url_for('adicionar_produto') }}">
+                    <input class="input_produto" type="text" name="nome" placeholder="Nome do Produto" required>
+                    <input class="input_produto" type="number" name="quantidade" placeholder="Quantidade" required>
+                    <input class="input_produto" type="text" name="tamanho" placeholder="Tamanho" required>
+                    <input class="input_produto" type="text" name="preco" placeholder="Preço" required>
+                    <select class="select_add_produto" name="categoria" required>
+                        <option value="" disabled selected>Selecione a Categoria</option>
+                        {% for categoria in CategoriaProdutos %}
+                            <option value="{{ categoria.name }}">{{ categoria.value }}</option>
+                        {% endfor %}
+                    </select>
+                    <select class="select_add_produto" name="genero" required>
+                        <option value="" disabled selected>Selecione o Genero</option>
+                        {% for genero in GeneroEnum %}
+                            <option value="{{ genero.name }}">{{ genero.value }}</option>
+                        {% endfor %}
+                    </select>
+                    <button  class="btn_add_produto" type="submit">Adicionar Produto</button>
+                </form>
+            </div>
+
+            <div class="div_alterar_produto">
+                <h1 class="titulo_sessao">Alterar Produto</h1>
+                <form class="forms_alterar_produto" method="GET" action="{{ url_for('principal') }}">
+                    <input class="input_alterar_produto" type="text" id="searchInput" name="query_alterar" placeholder="Digite o nome do produto..." value="{{ request.args.get('query', '') }}" required>
+                    <button class="btn_alterar_produto" type="submit">Buscar</button>
+                    <button class="btn_alterar_produto" type="button" onclick="resetSearch()">Desfazer Pesquisa</button>
+                </form>
+            
+                {% if produto_alterar %}
+                <h2>Produto Encontrado:</h2>
+                <form class="forms_produto_encontrado" method="POST" action="{{ url_for('alterar_produto') }}">
+                    <input class="input_produto" type="hidden" name="id" value="{{ produto_alterar.id }}">
+                    <input class="input_produto" type="text" name="nome" value="{{ produto_alterar.nome }}" required>
+                    <input class="input_produto" type="number" name="quantidade" value="{{ produto_alterar.quantidade }}" required>
+                    <input class="input_produto" type="text" name="tamanho" value="{{ produto_alterar.tamanho }}" required>
+                    <input class="input_produto" type="text" name="preco" value="{{ produto_alterar.preco }}" required>
+                    <select class="select_add_produto" name="categoria" required>
+                        <option value="Camisa" {% if produto_alterar.categoria == 'Camisa' %}selected{% endif %}>Camisa</option>
+                        <option value="Short" {% if produto_alterar.categoria == 'Short' %}selected{% endif %}>Short</option>
+                        <option value="Calça" {% if produto_alterar.categoria == 'Calça' %}selected{% endif %}>Calça</option>
+                        <option value="Tenis" {% if produto_alterar.categoria == 'Tenis' %}selected{% endif %}>Tênis</option>
+                        <option value="Blusa" {% if produto_alterar.categoria == 'Blusa' %}selected{% endif %}>Blusa</option>
+                    </select>
+                    <button class="btn_desfazer_pesquisa_item" type="submit">Alterar Produto</button>
+                </form>
+        
+                <form class="forms_deletar_produto" method="POST" action="{{ url_for('deletar_produto') }}">
+                    <input type="hidden" name="id" value="{{ produto_alterar.id }}">
+                    <button class="btn_deletar_produto" type="submit">Deletar Produto</button>
+                </form>
+            {% else %}
+                <p>Nenhum produto encontrado.</p>
+            {% endif %}
+
+            </div>
+    </section>
+
+    <footer id="Contato">
+        <div class="footer-content">
+            <div class="contact-info">
+                <p><strong>Contato</strong></p>
+                <ul>
+                    <li><a href="tel:+5511998765432">Telefone: (11) 99876-5432</a></li>
+                    <li><a href="mailto:contato@oliviamodas.com">Email: contato@oliviamodas.com</a></li>
+                    <li><a href="https://www.instagram.com/oliviamodas" target="_blank">Instagram: @oliviamodas</a></li>
+                </ul>
+            </div>
+            <div class="footer-logo">
+                <img class="logo_footer" src="{{ url_for('static', filename='img/Olivia Modas.jpg') }}" alt="Olivia Modas"/>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Olivia Modas - Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

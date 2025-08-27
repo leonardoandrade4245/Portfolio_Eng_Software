@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_login.css') }}">
+    <title>Tela Perfil</title>
+</head>
+<body class="tela_usuario">
+    <header class="header_tela_perfil">
+            <img class="logo_perfil" src="{{ url_for('static', filename='img/Olivia Modas white.png') }}" alt="Minha Imagem"/>
+    </header>
+
+    <section class="sessao_perfil">
+        <h1 class="nome_usuario">{{ usuario.nome }}</h1>
+        <p><strong>Email:</strong> {{ usuario.email }}</p>
+        <p><strong>Telefone:</strong> {{ usuario.telefone or 'Não informado' }}</p>
+        <p><strong>Cargo:</strong> {{ usuario.categoria.value }}</p>
+
+        <a href="{{ url_for('logout') }}">Sair</a>
+    </section>
+
+    <section class="sessao_cadastrar_usuario">
+        {% if usuario.categoria.value == "ADM" %}
+        <h2>Cadastrar Novo Usuário</h2>
+        <form class="forms_novo_usuario" action="{{ url_for('cadastrar_usuario') }}" method="post">
+            <label class="label_perfil">Nome:</label>
+            <input class="input_perfil" type="text" name="nome" required>
+            
+            <label class="label_perfil">Email:</label>
+            <input class="input_perfil" type="email" name="email" required>
+            
+            <label class="label_perfil">Telefone:</label>
+            <input class="input_perfil" type="text" name="telefone">
+            
+            <label class="label_perfil">Senha:</label>
+            <input class="input_perfil" type="password" name="senha" required>
+            
+            <label class="label_perfil">Categoria:</label>
+            <select class="select_perfil" name="categoria">
+                <option class="opcao_perfil" value="ADM">ADM</option>
+                <option class="opcao_perfil" value="Colaborador">Colaborador</option>
+            </select>
+            
+            <button class="btn_cadastrar_perfil" type="submit">Cadastrar</button>
+        </form>
+    {% endif %}
+    </section>
+</body>
+</html>
