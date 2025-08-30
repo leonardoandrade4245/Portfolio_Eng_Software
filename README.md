@@ -35,5 +35,36 @@ venv\Scripts\activate       # Windows
   4. Executar o Sistema
     -  python app.py
 
+
+ALTERAÇÃO DO ESCOPO
+
+* Nova Funcionalidade
+
+  - Adicionar um módulo de controle de vendas ao sistema Olivia Modas, permitindo que administradores e colaboradores possam:
+
+    1. Registrar vendas de produtos diretamente no sistema.
+
+    2. Reduzir automaticamente a quantidade do produto no estoque após a venda.
+
+    3. Visualizar histórico de vendas com detalhes: produto, quantidade vendida, valor total, data e usuário que realizou a venda.
+
+    4. Gerar relatório mensal de vendas em formato PDF ou planilha CSV.
+
+  * Justificativa da Alteração
+
+    Atualmente, o Olivia Modas oferece controle completo do estoque e gráficos de monitoramento, mas não possui integração com processos de venda. A inclusão do módulo de vendas atende às seguintes necessidades:
+      - Evitar inconsistências no estoque: Com a venda registrada automaticamente, o sistema atualiza a quantidade disponível em tempo real.
+      - Melhor acompanhamento financeiro: Permite gerar relatórios de faturamento e identificar produtos mais vendidos.
+      - Melhora a produtividade: Colaboradores podem registrar vendas diretamente, sem necessidade de planilhas externas ou cálculos manuais.
+      - Suporte à tomada de decisão: Relatórios consolidados ajudam administradores a planejar compras, promoções e reposição de estoque.
+
+Impacto no Projeto
+
+  - Inclusão de uma nova tabela no banco de dados (vendas) para registrar transações.
+  - Atualização do backend em Flask para criar endpoints de vendas.
+  - Adição de interfaces no front-end para registrar vendas e consultar histórico.
+  - Modificação do dashboard para incluir gráficos e métricas de vendas.
+-  Necessidade de atualizar o README e documentação do projeto.
+
 Autror,
 Leonardo Andrade Almeida
