@@ -24,7 +24,7 @@ Dashboard e Relatórios
 
 instalação e Execução
   1. Clonar Repositório
-     - git clone https://github.com/seu-usuario/OliviaModas.git
+     - git clone https://github.com/leonardoandrade4245/Portfolio_Eng_Softwar/OliviaModas.git
 cd OliviaModas
   2. Criai Ambiente Virtual
    - python -m venv venv
